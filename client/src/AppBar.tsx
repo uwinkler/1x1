@@ -13,6 +13,7 @@ import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
 import AdbIcon from '@mui/icons-material/Adb'
 import { useSelector } from './store/store'
+import { useNavigate } from 'react-router-dom'
 
 const pages = ['Training', 'Wettkampf', 'Erfolge']
 
@@ -20,13 +21,15 @@ export function AppBar() {
   const userImg = useSelector((s) => s.currentStudent.imgUrl)
   const name = useSelector((s) => s.currentStudent.name)
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null)
+  const navigate = useNavigate()
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget)
   }
 
-  const handleCloseNavMenu = () => {
+  const handleCloseNavMenu = (pageName: string) => {
     setAnchorElNav(null)
+    navigate('/' + pageName.toLowerCase())
   }
 
   return (
@@ -76,13 +79,13 @@ export function AppBar() {
                 horizontal: 'left'
               }}
               open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
+              onClose={() => handleCloseNavMenu('')}
               sx={{
                 display: { xs: 'block', md: 'none' }
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                <MenuItem key={page} onClick={() => handleCloseNavMenu(page)}>
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
@@ -111,7 +114,7 @@ export function AppBar() {
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={handleCloseNavMenu}
+                onClick={() => handleCloseNavMenu(page)}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
                 {page}
@@ -121,7 +124,7 @@ export function AppBar() {
 
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Student auswählen">
-              <IconButton href="/" sx={{ p: 0 }}>
+              <IconButton onClick={() => navigate('/')} sx={{ p: 0 }}>
                 <Avatar alt={name} src={userImg} />
               </IconButton>
             </Tooltip>
