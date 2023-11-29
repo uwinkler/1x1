@@ -120,11 +120,12 @@ export function AppBar() {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={() => null} sx={{ p: 0 }}>
+            <Tooltip title="Student auswählen">
+              <IconButton href="/" sx={{ p: 0 }}>
                 <Avatar alt={name} src={userImg} />
               </IconButton>
             </Tooltip>
+            <Typography variant="subtitle2">{name}</Typography>
           </Box>
         </Toolbar>
       </Container>

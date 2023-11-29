@@ -18,8 +18,8 @@ dependencies:
     specifier: ^5.14.18
     version: 5.14.18(@emotion/react@11.11.1)(@emotion/styled@11.11.0)(@types/react@18.2.39)(react-dom@18.2.0)(react@18.2.0)
   '@restate/core':
-    specifier: ^0.13.4
-    version: 0.13.4(immer@10.0.3)(react-dom@18.2.0)(react@18.2.0)(rxjs@7.8.1)
+    specifier: ^0.13.5
+    version: 0.13.5(immer@10.0.3)(react-dom@18.2.0)(react@18.2.0)(rxjs@7.8.1)
   '@tanstack/react-query':
     specifier: ^5.8.9
     version: 5.8.9(react-dom@18.2.0)(react@18.2.0)
@@ -741,8 +741,8 @@ packages:
     engines: {node: '>=14.0.0'}
     dev: false
 
-  /@restate/core@0.13.4(immer@10.0.3)(react-dom@18.2.0)(react@18.2.0)(rxjs@7.8.1):
-    resolution: {integrity: sha512-roBSO6Kwa4swhSEfHmC+zSpHL/tdUVGOmBvA9BqC0svdoB65sLBTnxcKTAzlCbCFk4a0vnxwMq64KEyCrTcTYw==}
+  /@restate/core@0.13.5(immer@10.0.3)(react-dom@18.2.0)(react@18.2.0)(rxjs@7.8.1):
+    resolution: {integrity: sha512-oaGrVO6rqnFJd2YwWAmZanjxP4QB14MUHY1GPy4hEVX9stFQ5CT3bJanuUCBFQaFTUqZ2KpUPhuq85M+nhMeCg==}
     peerDependencies:
       immer: '>=9.0.0'
       react: '>=18.2.0'
