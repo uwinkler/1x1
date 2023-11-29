@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
 @RestController
 @RequestMapping("/test")
 public class TestDataController {
@@ -44,13 +45,20 @@ public class TestDataController {
         Student jakob = new Student();
         jakob.setName("Jakob");
         jakob.setImgUrl("/assets/jakob.jpg");
-        
+
+
+        Student uli = new Student();
+        uli.setName("Uli");
+        uli.setImgUrl("/assets/uli.jpg");
+
+        studentDAO.save(uli);
         studentDAO.save(mara);
         studentDAO.save(jakob);
 
         // Cards
         insertCards(mara);
         insertCards(jakob);
+        insertCards(uli);
 
         return "Done";
     }
