@@ -6,6 +6,8 @@ import { connectServer } from './store/connectServer'
 import { store, useSelector } from './store/store'
 import { TrainingsPage } from './TrainingsPage'
 import { connectTrainingsPageState } from './TrainingsPage.state'
+import { Fight } from './Fight'
+import { TrophyPage } from './store/TrophyPage'
 
 connectServer(store)
 connectTrainingsPageState(store)
@@ -26,6 +28,24 @@ const router = createBrowserRouter([
       <>
         <AppBar />
         <TrainingsPage />
+      </>
+    )
+  },
+  {
+    path: '/wettkampf',
+    element: (
+      <>
+        <AppBar />
+        <Fight />
+      </>
+    )
+  },
+  {
+    path: '/erfolge',
+    element: (
+      <>
+        <AppBar />
+        <TrophyPage />
       </>
     )
   }
