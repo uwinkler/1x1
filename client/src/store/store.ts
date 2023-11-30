@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { Middleware, create, RestateStore } from '@restate/core'
+import { connectDevTools } from '../connectDevTools'
 
 //
 // Student
@@ -14,7 +15,7 @@ export type Student = z.infer<typeof studentSchema>
 //
 // Card
 //
-const cardSchema = z.object({
+export const cardSchema = z.object({
   id: z.string(),
   student: studentSchema,
   faktorOne: z.number().min(1).max(10),
@@ -26,7 +27,7 @@ export type Card = z.infer<typeof cardSchema>
 //
 // Training
 //
-const trainingSchema = z.object({
+export const trainingSchema = z.object({
   id: z.string(),
   answer: z.number(),
   card: cardSchema,
@@ -75,3 +76,5 @@ export const { useAppState, useSelector, useNext, store } = create<State>({
   },
   middleware: [validateMiddlewareWithZod]
 })
+
+connectDevTools(store)

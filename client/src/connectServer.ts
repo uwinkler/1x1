@@ -1,21 +1,21 @@
 import axios from 'axios'
 import { distinctUntilChanged, filter, map } from 'rxjs/operators'
-import { Card, NO_STUDENT, Store, Training } from './store'
+import { Card, NO_STUDENT, Training, store } from './store/store'
 
-export async function connectServer(store: Store) {
+export async function connectServer() {
   axios.defaults.baseURL = store.state.baseUrl
-  connectLogger(store)
-  await connectLoadStudents(store)
-  connectLoadUserData(store)
+  connectLogger()
+  await connectLoadStudents()
+  connectLoadUserData()
 }
 
-function connectLogger(store: Store) {
+function connectLogger() {
   store.state$.subscribe((update) => {
     console.log((update.trace || 'UPDATE') + ':', update.state)
   })
 }
 
-async function connectLoadStudents(store: Store) {
+async function connectLoadStudents() {
   try {
     const res = await axios.get('/api/students')
     const students = res.data
@@ -31,7 +31,7 @@ async function connectLoadStudents(store: Store) {
   }
 }
 
-function connectLoadUserData(store: Store) {
+function connectLoadUserData() {
   store.state$
     .pipe(
       map((update) => update.state),
@@ -73,3 +73,25 @@ function connectLoadUserData(store: Store) {
     return trainings
   }
 }
+
+// function connectUpdateCard() {
+//   onMessage('UpdateCard').subscribe(async (cardId) => {
+//     try {
+//       const card = store.state.cards.find((c) => c.id === cardId)
+//       await axios.put<Card>(`/api/cards/${cardId}`, card)
+//     } catch (error) {
+//       console.log(error)
+//     }
+//   })
+// }
+
+// function connectPostTraining() {
+//   onMessage('PostTraining').subscribe(async (id) => {
+//     try {
+//       const training = store.state.trainings.find((t) => t.id === id)
+//       await axios.post(`/api/trainings`, training)
+//     } catch (error) {
+//       console.log(error)
+//     }
+//   })
+// }
