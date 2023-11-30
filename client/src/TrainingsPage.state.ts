@@ -47,6 +47,6 @@ export function connectTrainingsPageState(store: Store) {
       distinctUntilChanged()
     )
     .subscribe(() => {
-      trainingsStore.next(DEFAULT_STATE, 'Reset trainiwngs state')
+      trainingsStore.next(DEFAULT_STATE, 'Reset trainings state')
     })
 }
