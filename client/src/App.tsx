@@ -1,18 +1,18 @@
 import { AppBar } from './AppBar'
 
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import { UserSelect } from './UserSelect'
+import { createHashRouter, RouterProvider } from 'react-router-dom'
+import { Fight } from './Fight'
 import { connectServer } from './store/connectServer'
 import { store, useSelector } from './store/store'
+import { TrophyPage } from './store/TrophyPage'
 import { TrainingsPage } from './TrainingsPage'
 import { connectTrainingsPageState } from './TrainingsPage.state'
-import { Fight } from './Fight'
-import { TrophyPage } from './store/TrophyPage'
+import { UserSelect } from './UserSelect'
 
 connectServer(store)
 connectTrainingsPageState(store)
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
     path: '/',
     element: (

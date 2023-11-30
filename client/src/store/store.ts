@@ -58,7 +58,7 @@ const validateMiddlewareWithZod: Middleware<State> = ({ nextState }) =>
 
 const BASE_URL = import.meta.env.DEV
   ? 'http://localhost:8080'
-  : 'http://julie:8080'
+  : 'http://localhost:8080'
 
 export const { useAppState, useSelector, useNext, store } = create<State>({
   state: {

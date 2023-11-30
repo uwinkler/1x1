@@ -1,0 +1,22 @@
+services:
+  postgres:
+    image: postgres:12-bullseye
+    restart: always
+    environment:
+      POSTGRES_DB: 1mal1
+      POSTGRES_USER: 1mal1
+      POSTGRES_PASSWORD: 9p9oaj3!d03
+    volumes:
+      - ./data:/var/lib/postgresql/data
+  app:
+    image: uliwinkler/1mal1:latest
+    restart: always
+    environment:
+      DB_HOST: postgres
+      DB_USER: 1mal1
+      DB_PASSWORD: 9p9oaj3!d03
+      DB_NAME: 1mal1
+    ports:
+      - '8080:8080'
+    depends_on:
+      - postgres
