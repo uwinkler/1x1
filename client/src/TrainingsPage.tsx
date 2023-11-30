@@ -72,7 +72,7 @@ export function TrainingsPage() {
   }
 
   function getTimeout() {
-    return 1000 + wrongAnswers.length * 1000
+    return 1000 + wrongAnswers.length * 2000
   }
 
   const startFirework = () => {
@@ -86,7 +86,9 @@ export function TrainingsPage() {
 
   function handleClick(answer: number) {
     if (answer === card.faktorOne * card.faktorTwo) {
-      startFirework()
+      if (wrongAnswers.length > 2) {
+        startFirework()
+      }
       playSuccessSound()
       setTimeout(() => nextCard(), getTimeout())
       setRightAnswerGiven(true)

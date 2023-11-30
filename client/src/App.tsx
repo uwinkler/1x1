@@ -1,8 +1,10 @@
 import { AppBar } from './AppBar'
 
 import { createHashRouter, RouterProvider } from 'react-router-dom'
+import { Fight } from './Fight'
 import { connectServer } from './store/connectServer'
 import { store, useSelector } from './store/store'
+import { TrophyPage } from './store/TrophyPage'
 import { TrainingsPage } from './TrainingsPage'
 import { connectTrainingsPageState } from './TrainingsPage.state'
 import { UserSelect } from './UserSelect'
@@ -26,6 +28,24 @@ const router = createHashRouter([
       <>
         <AppBar />
         <TrainingsPage />
+      </>
+    )
+  },
+  {
+    path: '/wettkampf',
+    element: (
+      <>
+        <AppBar />
+        <Fight />
+      </>
+    )
+  },
+  {
+    path: '/erfolge',
+    element: (
+      <>
+        <AppBar />
+        <TrophyPage />
       </>
     )
   }
