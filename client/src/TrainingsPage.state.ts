@@ -1,13 +1,15 @@
 import { create } from '@restate/core'
 import { Card, Store } from './store/store'
 import { distinctUntilChanged, map } from 'rxjs/operators'
+import { connectDevTools } from './connectDevTools'
 
 export type TrainingsPageState = {
   card: Card
   possibleAnswers: number[]
   wrongAnswers: number[]
-  nextLevel: number
   rightAnswerGiven: boolean
+  startTime: number
+  endTime: number
 }
 
 const DUMMY_CARD: Card = {
@@ -27,7 +29,8 @@ const DEFAULT_STATE: TrainingsPageState = {
   rightAnswerGiven: false,
   possibleAnswers: [],
   wrongAnswers: [],
-  nextLevel: 0
+  startTime: 0,
+  endTime: 0
 }
 
 export const {
@@ -36,7 +39,10 @@ export const {
   useAppState: useTrainingsState,
   store: trainingsStore
 } = create<TrainingsPageState>({
-  state: DEFAULT_STATE
+  state: DEFAULT_STATE,
+  options: {
+    storeName: 'trainingsPage'
+  }
 })
 
 export function connectTrainingsPageState(store: Store) {
@@ -50,3 +56,5 @@ export function connectTrainingsPageState(store: Store) {
       trainingsStore.next(DEFAULT_STATE, 'Reset trainings state')
     })
 }
+
+connectDevTools(trainingsStore)

@@ -10,12 +10,17 @@ export function shuffle<T>(array: T[]) {
 }
 
 export function randomNumbers({
-  startWith = [],
-  length = 5
-}: { startWith?: number[]; length?: number; max?: number } = {}) {
+  factor,
+  length,
+  startWith
+}: {
+  factor: number
+  startWith: number[]
+  length: number
+}) {
   const randomNumbers: number[] = [...startWith]
   while (randomNumbers.length < length) {
-    const randomNumber = Math.floor(Math.random() * 10 + 1)
+    const randomNumber = Math.floor(Math.random() * 10 + 1) * factor
     if (!randomNumbers.includes(randomNumber)) {
       randomNumbers.push(randomNumber)
     }

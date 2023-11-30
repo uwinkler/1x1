@@ -3,18 +3,19 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography'
-import { useSelector } from './store/store'
+import { Training, useNext, useSelector } from './store/store'
 
 import Grid from '@mui/material/Grid'
 import React from 'react'
-import { randomNumbers, shuffle } from './utils'
-import successSound from './sounds/answer-ding.mp3'
-import failureSound from './sounds/wrong.mp3'
 import {
   useNextTrainingsState,
   useTrainingsSelector,
   useTrainingsState
 } from './TrainingsPage.state'
+import successSound from './sounds/answer-ding.mp3'
+import failureSound from './sounds/wrong.mp3'
+import { randomNumbers, shuffle } from './utils'
+import axios from 'axios'
 
 function useAudio(url: string) {
   const [audio] = React.useState(new Audio(url))
@@ -30,7 +31,7 @@ function useAudio(url: string) {
 
 function useNextCard() {
   const cards = useSelector((s) => s.cards)
-  const setTrainingState = useNextTrainingsState((s) => s)
+  const setTrainingState = useNextTrainingsState((s) => s, 'useNextCard')
 
   const nextCard = React.useCallback(() => {
     const sortedCards = [...cards].sort((a, b) => a.level - b.level)
@@ -38,20 +39,62 @@ function useNextCard() {
     const lowestLevelCards = sortedCards.filter((c) => c.level === lowestLevel)
     const nextCard = shuffle(lowestLevelCards)[0]
     const result = nextCard.faktorOne * nextCard.faktorTwo
-    const possibleAnswers = shuffle([
-      result,
-      ...randomNumbers().map((n) => n * nextCard.faktorOne)
-    ])
+    const numberOfPossibleAnswers = Math.min(10, nextCard.level + 2)
+    const possibleAnswers = shuffle(
+      randomNumbers({
+        factor: nextCard.faktorOne,
+        startWith: [result],
+        length: numberOfPossibleAnswers
+      })
+    )
 
     setTrainingState((s) => {
       s.card = nextCard
       s.possibleAnswers = possibleAnswers
       s.wrongAnswers = []
       s.rightAnswerGiven = false
+      s.startTime = Date.now()
     })
   }, [cards, setTrainingState])
 
   return nextCard
+}
+
+function useUpdateCard() {
+  const decrease = useTrainingsSelector((s) => s.wrongAnswers.length > 0)
+  const cardId = useTrainingsSelector((s) => s.card.id)
+  const startTime = useTrainingsSelector((s) => s.startTime)
+  const setAppState = useNext((s) => s)
+
+  return React.useCallback(() => {
+    setAppState((s) => {
+      const card = s.cards.find((c) => c.id === cardId)
+
+      if (!card) {
+        return
+      }
+
+      card.level = decrease
+        ? Math.max(1, card.level - 1)
+        : Math.min(10, card.level + 1)
+
+      const training: Training = {
+        id: crypto.randomUUID(),
+        answer: 0,
+        card,
+        timeMs: Date.now() - startTime
+      }
+
+      s.trainings.push(training)
+
+      try {
+        axios.put(`/api/cards/${cardId}`, card)
+        axios.post(`/api/trainings`, training)
+      } catch (e) {
+        console.error(e)
+      }
+    })
+  }, [decrease, cardId, setAppState, startTime])
 }
 
 export function TrainingsPage() {
@@ -60,12 +103,14 @@ export function TrainingsPage() {
   const possibleAnswers = useTrainingsSelector((s) => s.possibleAnswers)
   const wrongAnswers = useTrainingsSelector((s) => s.wrongAnswers)
   const [rightAnswerGiven, setRightAnswerGiven] = useTrainingsState(
-    (s) => s.rightAnswerGiven
+    (s) => s.rightAnswerGiven,
+    { trace: 'setRightAnswerGiven' }
   )
   const ref = React.useRef<FireworksHandlers>(null)
   const playSuccessSound = useAudio(successSound)
   const playFailureSound = useAudio(failureSound)
   const nextTrainingState = useNextTrainingsState((s) => s)
+  const updateCard = useUpdateCard()
 
   if (card.id == 'DUMMY-CARD') {
     nextCard()
@@ -86,12 +131,13 @@ export function TrainingsPage() {
 
   function handleClick(answer: number) {
     if (answer === card.faktorOne * card.faktorTwo) {
-      if (wrongAnswers.length > 2) {
+      if (wrongAnswers.length > 0) {
         startFirework()
       }
       playSuccessSound()
-      setTimeout(() => nextCard(), getTimeout())
       setRightAnswerGiven(true)
+      updateCard()
+      setTimeout(() => nextCard(), getTimeout())
     } else {
       nextTrainingState((s) => {
         s.wrongAnswers.push(answer)
@@ -103,7 +149,7 @@ export function TrainingsPage() {
   return (
     <>
       <Box sx={{ flex: 1, display: 'grid', placeItems: 'center' }}>
-        <Paper elevation={2} sx={{ padding: '10vw' }}>
+        <Paper elevation={2} sx={{ padding: '10vw', width: '500px' }}>
           <Typography variant="h3">
             {card.faktorOne} x {card.faktorTwo} ={' '}
             {rightAnswerGiven ? card.faktorOne * card.faktorTwo : '?'}
@@ -112,7 +158,7 @@ export function TrainingsPage() {
 
         <Grid container gap={2} justifyContent={'center'}>
           {possibleAnswers.map((num) => (
-            <Grid item>
+            <Grid key={num} item>
               <AnswerButton
                 isWrong={wrongAnswers.includes(num)}
                 key={num}

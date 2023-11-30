@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class CardDAO {
@@ -20,7 +21,7 @@ public class CardDAO {
         this.entityManager = entityManager;
         this.cardRepository = cardRepository;
     }
-    
+
     @Transactional
     public void save(Card card) {
         entityManager.persist(card);
@@ -41,9 +42,12 @@ public class CardDAO {
     }
 
     public Card update(String id, Card next) {
-        if (cardRepository.existsById(id)) {
-            next.setId(id);
-            return cardRepository.save(next);
+        Optional<Card> card = cardRepository.findById(id);
+        if (card.isPresent()) {
+            Card c = card.get();
+            c.setLevel(next.getLevel());
+            cardRepository.save(card.get());
+            return c;
         } else {
             return null;
         }

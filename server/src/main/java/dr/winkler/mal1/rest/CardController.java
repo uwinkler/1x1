@@ -19,13 +19,11 @@ public class CardController {
     }
 
     @PutMapping("/{cardId}")
-    public Card update(@PathVariable String id, @RequestBody Card next) {
-        Card responseCard = cardDAO.update(id, next);
+    public Card update(@PathVariable String cardId, @RequestBody Card next) {
+        Card responseCard = cardDAO.update(cardId, next);
         if (responseCard == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         return responseCard;
     }
-
-
 }

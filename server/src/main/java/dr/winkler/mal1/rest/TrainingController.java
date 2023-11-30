@@ -17,12 +17,12 @@ public class TrainingController {
         this.dao = dao;
     }
 
-    @PostMapping("/")
+    @PostMapping("")
     public Training postTraining(@RequestBody Training next) {
         return dao.save(next);
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public List<Training> getTrainings() {
         return dao.getAll();
     }
