@@ -8,8 +8,6 @@ services:
       POSTGRES_PASSWORD: 9p9oaj3!d03
     volumes:
       - ./data:/var/lib/postgresql/data
-    ports:
-      - '5432:5432'
   app:
     image: uliwinkler/1mal1:latest
     restart: always
